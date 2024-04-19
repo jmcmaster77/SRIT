@@ -23,8 +23,8 @@ class Security():
 
     @classmethod
     def verivy_token(cls, headers):
-        if "Authorization" in headers.keys():
-            autorization = headers["Authorization"]
+        if "authorization" in headers.keys():
+            autorization = headers["authorization"]
             encoded_token = autorization.split(" ")[1]
             if (len(encoded_token) > 0):
 

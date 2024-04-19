@@ -1,32 +1,33 @@
-from flask import Blueprint, request, jsonify
-
+from fastapi import FastAPI, APIRouter, Request
 from services.models.User import User
 from services.AuthService import AuthService
-from utils.Security import Security 
+from utils.Security import Security
 from passlib.hash import sha256_crypt
-auth = Blueprint("auth", __name__)
+from pydantic import BaseModel
+auth = APIRouter()
 
-# hast = sha256_crypt.hash("srit20240419*.")
 
-@auth.route("/")
+@auth.get("/")
 def test():
-    return ("Aqui vamos con blue")
+    return {"status": "Dev"}
 
 
-@auth.route("/", methods=["POST"])
-def get_user_data():
-    id = request.json["id"]
-    username = request.json["username"]
-    password = request.json["password"]
-    # para aplicar el hash con passlib 
-    # print("ps: ", sha256_crypt.encrypt(password)) 
+class Userget(BaseModel):
+    id: int
+    username: str
+    password: str
 
-    _user = User(id, username, password, None)
+
+@auth.post("/")
+def get_user_data(user: Userget):
+    # print("ps: ", sha256_crypt.encrypt(user.password))
+    print("veamos:", user)
+    _user = User(user.id, user.username, user.password, None)
 
     authenticated_user = AuthService.login_user(_user)
 
     if (authenticated_user != None):
         encode_token = Security.generate_token(authenticated_user)
-        return jsonify({'success': True, 'token': encode_token})
+        return {'success': True, 'token': encode_token}
     else:
-        return jsonify({"success": False})
+        return {"success": False}
