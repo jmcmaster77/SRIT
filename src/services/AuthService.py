@@ -12,7 +12,7 @@ class AuthService():
             authenticated_user = None
 
             rconsult = userEntity(
-                dbcon.pruebas.users.find_one({'id': int(user.id)}))
+                dbcon.srit.users.find_one({'id': int(user.id)}))
 
             if user.username == rconsult["username"] and sha256_crypt.verify(user.password, rconsult["password"]):
                 authenticated_user = User(

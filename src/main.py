@@ -2,12 +2,14 @@ from fastapi import FastAPI
 from fastapi import APIRouter
 from routes.Auth import auth
 from routes.consulta import consulta
+from routes.rpersonas import rpersonas
 import uvicorn
 
 app = FastAPI()
 
-app.include_router(auth)
-app.include_router(consulta)
+app.include_router(rpersonas, tags=["Registro de Personas"])
+app.include_router(auth, tags=["Autenticacion"])
+app.include_router(consulta, tags=["Consultas"])
 
 
 if __name__ == '__main__':
