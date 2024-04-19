@@ -5,4 +5,4 @@ from config.config import userdb, passworddb, host, portdb
 MONGO_URI = f"mongodb://" + userdb + ":" + \
     passworddb + "@" + host + ":" + portdb
 
-dbcn = MongoClient(MONGO_URI)
+dbcon = MongoClient(MONGO_URI)
