@@ -1,7 +1,7 @@
 from fastapi import FastAPI, APIRouter, Request, Header
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
-from uuid import uuid4 as uuid
+# from uuid import uuid4 as uuid
 from utils.db import dbcon
 from utils.Security import Security
 
