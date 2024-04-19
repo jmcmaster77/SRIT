@@ -2,11 +2,11 @@ import datetime
 import pytz
 import jwt
 
-jwt_key = "JWTKEY15332"
+from config.config import ks
 
 
 class Security():
-    jwt_key = "JWTKEY15332"
+    jwt_key = ks
     tz = pytz.timezone("America/Caracas")
 
     @classmethod
