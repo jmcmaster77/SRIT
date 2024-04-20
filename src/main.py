@@ -15,7 +15,7 @@ app.include_router(consulta, tags=["Consultas"])
 
 
 if __name__ == '__main__':
-    config = uvicorn.Config("main:app", port=5000,
+    config = uvicorn.Config("main:app", host="0.0.0.0", port=5000,
                             log_level="info", reload=True)
     server = uvicorn.Server(config)
 
