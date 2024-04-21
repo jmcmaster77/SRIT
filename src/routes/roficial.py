@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Security as Secu
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from datetime import datetime
 # from uuid import uuid4 as uuid
 # para validacion del token
@@ -7,14 +7,13 @@ from fastapi.security.api_key import APIKeyHeader
 from utils.db import dbcon
 from utils.Security import Security
 
-rpersonas = APIRouter()
+roficial = APIRouter()
 token_key = APIKeyHeader(name="Authorization")
 
 
-class Dpersonas(BaseModel):
-    _id: str
+class Doficial(BaseModel):
+    id: str
     fullname: str
-    email: EmailStr
     registrado: datetime = datetime.now()
 
 
@@ -26,22 +25,21 @@ def get_current_token(auth_key: str = Secu(token_key)):
     return auth_key
 
 
-@rpersonas.post("/rpersonas")
-def registro_personas(datos: Dpersonas, curren_token: Token = Depends(get_current_token)):
-    nr = dict(datos)
-    # print("Auth_get:", Authorization)   # Ojito borrar
+@roficial.post("/roficial")
+def registro_oficial(datos: Doficial, curren_token: Token = Depends(get_current_token)):
+    datosd = dict(datos)
     v = Security.verify_token_r(str(curren_token).split(" ")[1])
 
     if v:
-        con = dbcon.srit.personas.find_one({'email': nr["email"]})
+        con = dbcon.srit.oficiales.find_one({'id': datosd["id"]})
 
         if con == None:
-            registro = dbcon.srit.personas.insert_one(nr)
+            registro = dbcon.srit.oficiales.insert_one(datosd)
             # print("NR:", registro)
-            return {"message": "persona registrada"}
+            return {"message": "Oficial registrado"}
         else:
 
-            return {"error": "correo ya registrado"}
+            return {"error": "Id Oficial ya existe"}
     else:
         respuesta = {"Auth": "No autorizado"}
         return respuesta, 401

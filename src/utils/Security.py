@@ -40,7 +40,7 @@ class Security():
         return False
 
     @classmethod
-    def virify_token_r(cls, token):
+    def verify_token_r(cls, token):
         
         if (len(token) > 0):
 
