@@ -33,6 +33,8 @@ el Docker File esta preparado para realizar un  build de un  contenedor con una 
 utilizar el siguiente comando en la carpeta donde hagan el pull de la app api 
 docker build -t SRIT . 
 
+![image](https://github.com/jmcmaster77/SRIT/assets/85424450/05f9508c-3b4f-46e4-8075-21f6da5ccf87)
+
 JWT de prueba 
 
 token user
