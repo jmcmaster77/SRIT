@@ -14,4 +14,9 @@ Para instalar los paquetes necesarios:
 
 pip install -r requirements.txt
 
+![image](https://github.com/jmcmaster77/SRIT/assets/85424450/66dff32f-c82c-4e1c-ac09-c62fd6c36e5b)
+
+![image](https://github.com/jmcmaster77/SRIT/assets/85424450/b5ea8419-840f-4d4f-9d2a-233535bc434a)
+
+
 
