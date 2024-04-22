@@ -133,6 +133,21 @@ def modificar_usuario(id: int, user: Duser_m, curren_token: Token = Depends(get_
         return {"Mensajes": "No autorizado"}
 
 
+@auth.delete("/users/{id}")
+def eliminar_usuario(id: int, curren_token: Token = Depends(get_current_token)):
+    has_access = Security.verify_token_r(str(curren_token).split(' ')[1])
+    if has_access:
+
+        dbcommint = dbcon.srit.users.find_one_and_delete({"id": id})
+        if dbcommint == None:
+            return {"mensaje": "Id no encontrado"}
+        else:
+            return {"mensaje": "Usuario eliminado"}
+    else:
+
+        return {"Mensajes": "No autorizado"}
+
+
 @auth.post("/verify/token")
 def verify_token(curren_token: Token = Depends(get_current_token)):
     has_access = Security.verify_token_r(str(curren_token).split(' ')[1])

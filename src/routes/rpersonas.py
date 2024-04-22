@@ -6,6 +6,7 @@ from datetime import datetime
 from fastapi.security.api_key import APIKeyHeader
 from utils.db import dbcon
 from utils.Security import Security
+from bson import ObjectId
 
 rpersonas = APIRouter()
 token_key = APIKeyHeader(name="Authorization")
@@ -27,7 +28,7 @@ def get_current_token(auth_key: str = Secu(token_key)):
 
 
 @rpersonas.post("/rpersonas")
-def registro_personas(datos: Dpersonas, curren_token: Token = Depends(get_current_token)):
+def registro_persona(datos: Dpersonas, curren_token: Token = Depends(get_current_token)):
     nr = dict(datos)
     # print("Auth_get:", Authorization)   # Ojito borrar
     v = Security.verify_token_r(str(curren_token).split(" ")[1])
@@ -45,3 +46,46 @@ def registro_personas(datos: Dpersonas, curren_token: Token = Depends(get_curren
     else:
         respuesta = {"Auth": "No autorizado"}
         return respuesta, 401
+
+
+@rpersonas.put("/rpersonas/{id}")
+def modificar_persona(id: str, persona: Dpersonas, curren_token: Token = Depends(get_current_token)):
+    has_access = Security.verify_token_r(str(curren_token).split(' ')[1])
+    if has_access:
+        fp = dict(persona)
+
+        dbcommit = dbcon.srit.personas.find_one_and_update(
+            {"_id": ObjectId(id)}, {"$set": fp})
+
+        if dbcommit == None:
+            return {"mensaje": "Id no encontrado"}
+        else:
+            return {"mensaje": "Usuario modificado"}
+    else:
+
+        return {"Mensaje": "No autorizado"}, 401
+
+
+@rpersonas.delete("/rpersonas/{id}")
+def eliminar_personas(id: str, curren_token: Token = Depends(get_current_token)):
+    has_access = Security.verify_token_r(str(curren_token).split(' ')[1])
+    if has_access:
+        # validacion si tiene vehiculos registrados
+        dbvalidacion = dbcon.srit.vehiculos.find_one({"idp": id})
+
+        if dbvalidacion == None:
+            dbcommint = dbcon.srit.personas.find_one_and_delete(
+                {"_id": ObjectId(id)})
+
+            if dbcommint == None:
+                return {"mensaje": "Id no encontrado"}
+
+            else:
+                return {"mensaje": "Persona eliminado"}
+        else:
+
+            return {"mensaje": "Persona posee vehiculos registrados"}
+
+    else:
+
+        return {"Mensaje": "No autorizado"}, 401
