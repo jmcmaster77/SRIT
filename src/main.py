@@ -5,10 +5,10 @@ import uvicorn
 
 app = FastAPI()
 
-app.include_router(rpersonas.rpersonas, tags=["Registro"])
-app.include_router(registro_vehiculos.rvehiculos, tags=["Registro"])
-app.include_router(roficial.roficial, tags=["Registro"])
-app.include_router(auth, tags=["Autenticacion"])
+app.include_router(rpersonas.rpersonas, tags=["Personas"])
+app.include_router(registro_vehiculos.rvehiculos, tags=["Vehiculos"])
+app.include_router(roficial.roficial, tags=["Oficiales"])
+app.include_router(auth, tags=["Gestion Usuario"])
 app.include_router(consulta.consulta, tags=["Consultas"])
 
 

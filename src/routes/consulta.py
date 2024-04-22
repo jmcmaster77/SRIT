@@ -20,8 +20,8 @@ def get_current_token(auth_key: str = Secu(token_key)):
     return auth_key
 
 
-@consulta.get('/consulta')
-def get_consulta(curren_token: Token = Depends(get_current_token)):
+@consulta.get('/personas')
+def consulta_personas(curren_token: Token = Depends(get_current_token)):
     # tk = str(curren_token).split(' ')[1]
 
     has_access = Security.verify_token_r(str(curren_token).split(' ')[1])
@@ -30,8 +30,8 @@ def get_consulta(curren_token: Token = Depends(get_current_token)):
             consulta = (personasEntity(dbcon.srit.personas.find()))
             return consulta
         except Exception as error:
-            print(error)
-            return
+
+            return {"Mensaje": error}
     else:
         respuesta = {"Auth": "No autorizado"}
         return respuesta, 401
