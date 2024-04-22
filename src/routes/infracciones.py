@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, Security as Secu
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Text
 from datetime import datetime
 # from uuid import uuid4 as uuid
 from utils.db import dbcon
 from utils.Security import Security
-from schemas.infracciones import infraccionEntity, infracionesEntity
+from schemas.infracciones import infraccionEntity, infracionesEntity, infraccionxeEntity, infraccionxesEntity
 from bson import ObjectId
 from fastapi.security.api_key import APIKeyHeader
 
@@ -75,6 +75,67 @@ def consulta_de_infracciones(curren_token: Token = Depends(get_current_token)):
 
 
 @rinfraccion.get("/infracciones_email")
-def consulta_ingracciones_por_email():
+def consulta_ingracciones_por_email(email: EmailStr):
+
+    pipeline = [
+    {
+        '$project': {
+            'idp': 1, 
+            'fullname': 1, 
+            'email': 1
+        }
+    }, {
+        '$lookup': {
+            'from': 'vehiculos', 
+            'localField': 'idp', 
+            'foreignField': 'idp', 
+            'as': 'vehiculos'
+        }
+    }, {
+        '$unwind': {
+            'path': '$vehiculos'
+        }
+    }, {
+        '$project': {
+            '_id': 1, 
+            'idp': 1, 
+            'fullname': 1, 
+            'email': 1, 
+            'placa': '$vehiculos.placa', 
+            'marca': '$vehiculos.marca'
+        }
+    }, {
+        '$lookup': {
+            'from': 'infracciones', 
+            'localField': 'placa', 
+            'foreignField': 'placa', 
+            'as': 'infracciones'
+        }
+    }, {
+        '$unwind': {
+            'path': '$infracciones'
+        }
+    }, {
+        '$project': {
+            '_id': 1, 
+            'fullname': 1, 
+            'email': 1, 
+            'idp': 1, 
+            'placa': 1, 
+            'marca': 1, 
+            'multa': '$infracciones.multa', 
+            'comentario': '$infracciones.comentario', 
+            'pagado': '$infracciones.pagada'
+        }
+    }, {
+        '$match': {
+            'email': email
+        }
+    }
+    ]
+
+    dbcommint = dbcon.srit.personas.aggregate(pipeline)
     
-    return
+    # infraccionEntity(dbcommint)
+
+    return infraccionxesEntity(dbcommint)
