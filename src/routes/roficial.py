@@ -8,14 +8,18 @@ from fastapi.security.api_key import APIKeyHeader
 from utils.db import dbcon
 from utils.Security import Security
 from bson import ObjectId
+from passlib.hash import sha256_crypt
 
 roficial = APIRouter()
 token_key = APIKeyHeader(name="Authorization")
 
 
 class Doficial(BaseModel):
-    id: str
+    id: int
     fullname: str
+    username: str
+    password: str
+    password2: str
     registrado: datetime = datetime.now()
 
 
@@ -36,9 +40,16 @@ def registro_oficiales(datos: Doficial, curren_token: Token = Depends(get_curren
         con = dbcon.srit.oficiales.find_one({'id': datosd["id"]})
 
         if con == None:
-            registro = dbcon.srit.oficiales.insert_one(datosd)
-            # print("NR:", registro)
-            return {"message": "Oficial registrado"}
+            if datosd["password"] == datosd["password2"]:
+                del datosd["password2"]
+                datosd["password"] = sha256_crypt.encrypt(datosd["password"])
+
+                registro = dbcon.srit.oficiales.insert_one(datosd)
+                
+                return {"message": "Oficial registrado"}
+            else: 
+                return {"message": "password no coinciden"}
+            
         else:
 
             return {"error": "Id Oficial ya existe"}
@@ -55,39 +66,45 @@ def buscar_oficiales(curren_token: Token = Depends(get_current_token)):
         if dbcommit != None:
             return oficialesEntity(dbcommit)
         else:
-            return {"mensaje":" No se encontraron registros" } , 404
+            return {"mensaje": " No se encontraron registros"}, 404
 
     else:
-        
+
         return {"mensaje": "No autorizado"}
 
 
 @roficial.get("/roficial/{id}")
-def buscar_oficial_id(id : str, curren_token: Token = Depends(get_current_token)):
+def buscar_oficial_id(id: int, curren_token: Token = Depends(get_current_token)):
     acceso = Security.verify_token_r(str(curren_token).split(" ")[1])
     if acceso:
         dbcommit = dbcon.srit.oficiales.find_one({"id": id})
         if dbcommit != None:
             return oficialEntity(dbcommit)
         else:
-            return {"mensaje":" Id no encontrado" }, 404
+            return {"mensaje": " Id no encontrado"}, 404
     else:
-        
+
         return {"mensaje": "No autorizado"}
 
 
 @roficial.put("/roficial/{id}")
-def modificar_registro_de_oficial_obj_id(id:str, datos: Doficial, curren_token: Token = Depends(get_current_token)):
+def modificar_registro_de_oficial_obj_id(id: str, datos: Doficial, curren_token: Token = Depends(get_current_token)):
     acceso = Security.verify_token_r(str(curren_token).split(" ")[1])
     if acceso:
         fo = dict(datos)
-        dbcommit = dbcon.srit.oficiales.find_one_and_update({"_id":ObjectId(id)},{"$set": fo})
-        if dbcommit != None:
-            return {"mensaje":"Registro de oficial modificado"}
-        else: 
-            return {"mensaje":"Id no encontrado "}, 404 
+        if fo["password"] == fo["password2"]:
+            del fo["password2"]
+            fo["password"] = sha256_crypt.encrypt(fo["password"])
+            dbcommit = dbcon.srit.oficiales.find_one_and_update(
+                {"_id": ObjectId(id)}, {"$set": fo})
+            if dbcommit != None:
+                return {"mensaje": "Registro de oficial modificado"}
+            else:
+                return {"mensaje": "Id no encontrado "}, 404
+        else:
+            return {"mensaje": "password no coinciden"}
     else:
-        to_do= "no go"
+        to_do = "no go"
 
         return {"mensaje": "No autorizado"}
 
@@ -98,7 +115,6 @@ def borrar_registo_de_oficial(curren_token: Token = Depends(get_current_token)):
     if acceso:
         to_do = "go"
     else:
-        to_do= "no go"
+        to_do = "no go"
 
         return {"mensaje": "No autorizado"}
-

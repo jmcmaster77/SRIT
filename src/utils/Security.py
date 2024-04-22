@@ -22,6 +22,18 @@ class Security():
         return jwt.encode(payload, cls.jwt_key, algorithm="HS256")
 
     @classmethod
+    def generate_token_ofi(cls, authenticated_user):
+        payload = {
+            'iat': datetime.datetime.now(tz=cls.tz),
+            'exp': datetime.datetime.now(tz=cls.tz)+datetime.timedelta(days=180),
+            'id': authenticated_user.id,
+            'usernamer': authenticated_user.username,
+            'fullname': authenticated_user.fullname,
+            'roles': ['oficial', 'consultor']
+        }
+        return jwt.encode(payload, cls.jwt_key, algorithm="HS256")
+
+    @classmethod
     def verify_token(cls, headers):
         if "authorization" in headers.keys():
             autorization = headers["authorization"]
@@ -41,7 +53,7 @@ class Security():
 
     @classmethod
     def verify_token_r(cls, token):
-        
+
         if (len(token) > 0):
 
             try:
@@ -53,4 +65,3 @@ class Security():
                 return False
             except (jwt.ExpiredSignatureError, jwt.InvalidSignatureError, jwt.InvalidTokenError):
                 return False
-        

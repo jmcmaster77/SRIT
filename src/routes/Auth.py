@@ -36,6 +36,20 @@ def generacion_token_for_user(user: Userget):
         return {"success": False}
 
 
+@auth.post("/get_token_oficial")
+def generacion_token_for_oficial(user: Userget):
+    
+    _user = User(user.id, user.username, user.password, None)
+
+    authenticated_user = AuthService.login_oficial(_user)
+
+    if (authenticated_user != None):
+        encode_token = Security.generate_token(authenticated_user)
+        return {'success': True, 'token': encode_token}
+    else:
+        return {"success": False}
+
+
 class Token(BaseModel):
     token: str
 

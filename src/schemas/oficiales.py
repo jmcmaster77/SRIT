@@ -3,6 +3,8 @@ def oficialEntity(item) -> dict:
         "_id": str(item["_id"]),
         "id": item["id"],
         "fullname": item["fullname"],
+        "username": item["username"],
+        "password": item["password"],
         "registrado": item["registrado"]
     }
 

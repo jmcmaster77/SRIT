@@ -18,9 +18,26 @@ python src\main.py
 
 
 
+
 ![image](https://github.com/jmcmaster77/SRIT/assets/85424450/66dff32f-c82c-4e1c-ac09-c62fd6c36e5b)
 
 ![image](https://github.com/jmcmaster77/SRIT/assets/85424450/b5ea8419-840f-4d4f-9d2a-233535bc434a)
 
+pueden descargar el proyecto modificar .env para editar la ip y apuntar al contenedor o servidor de mongo donde hagan la restauracion de la base de datos. SRIT el dump srit.rar esta disponible en los archivos 
+
+
+el Docker File esta preparado para realizar un  build de un  contenedor con una imagen de alpine 
+
+utilizar el siguiente comando en la carpeta donde hagan el pull de la app api 
+docker build -t SRIT . 
+
+JWT de prueba 
+
+token user
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTM3MjE1NjIsImV4cCI6MTcyOTI3MzU2MiwiaWQiOjAsInVzZXJuYW1lciI6IlJheSIsImZ1bGxuYW1lIjoiUmF5YW4gUmF5Iiwicm9sZXMiOlsiYWRtaW4iLCJlZGl0Il19.QkyZHGBa2OdwbhEQ2eMzWjRyH0iHJZ-X5MkxlAMQ4og
+
+token oficial 
+Bearer
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTM3ODMzNjAsImV4cCI6MTcyOTMzNTM2MCwiaWQiOjEsInVzZXJuYW1lciI6InBpY2FwaWVkcmEiLCJmdWxsbmFtZSI6IlBlZHJvIFBpY2FwaWVkcmEiLCJyb2xlcyI6WyJhZG1pbiIsImVkaXQiXX0.fasWb6Smz1zTw4Q-zo0MPdippGgSEKlJOH21KqD664A
 
 
