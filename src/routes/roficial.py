@@ -15,7 +15,7 @@ token_key = APIKeyHeader(name="Authorization")
 
 
 class Doficial(BaseModel):
-    id: int
+    idof: int
     fullname: str
     username: str
     password: str
@@ -77,7 +77,7 @@ def buscar_oficiales(curren_token: Token = Depends(get_current_token)):
 def buscar_oficial_id(id: int, curren_token: Token = Depends(get_current_token)):
     acceso = Security.verify_token_r(str(curren_token).split(" ")[1])
     if acceso:
-        dbcommit = dbcon.srit.oficiales.find_one({"id": id})
+        dbcommit = dbcon.srit.oficiales.find_one({"idof": id})
         if dbcommit != None:
             return oficialEntity(dbcommit)
         else:

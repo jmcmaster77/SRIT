@@ -1,7 +1,7 @@
 def oficialEntity(item) -> dict:
     return {
         "_id": str(item["_id"]),
-        "id": item["id"],
+        "idof": item["idof"],
         "fullname": item["fullname"],
         "username": item["username"],
         "password": item["password"],

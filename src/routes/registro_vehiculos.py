@@ -19,7 +19,7 @@ class Token(BaseModel):
 
 class Dvehiculos(BaseModel):
     _id: str
-    idp: str
+    idp: int
     placa: str
     marca: str
     color: str
@@ -37,7 +37,7 @@ def registro_vehiculos(datos: Dvehiculos, curren_token: Token = Depends(get_curr
     v = Security.verify_token_r(str(curren_token).split(" ")[1])
 
     if v:
-        con = dbcon.srit.personas.find_one({'_id': ObjectId(datosd["idp"])})
+        con = dbcon.srit.personas.find_one({'idp': datosd["idp"]})
 
         if con != None:
             bplaca = dbcon.srit.vehiculos.find_one(
@@ -108,7 +108,7 @@ def modificar_registro_vehiculo(id: str, vehiculo: Dvehiculos,  curren_token: To
     if acceso:
         fv = dict(vehiculo)
         # valida que el id de la persona este registrado
-        dbvalidate = dbcon.srit.personas.find_one({"_id": ObjectId(fv["idp"])})
+        dbvalidate = dbcon.srit.personas.find_one({"idp": fv["idp"]})
 
         if dbvalidate == None:
             return {"mensaje":"Id de Persona no validado"}
