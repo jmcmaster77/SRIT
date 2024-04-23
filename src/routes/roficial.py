@@ -15,7 +15,6 @@ token_key = APIKeyHeader(name="Authorization")
 
 
 class Doficial(BaseModel):
-    idof: int
     fullname: str
     username: str
     password: str
@@ -37,7 +36,16 @@ def registro_oficiales(datos: Doficial, curren_token: Token = Depends(get_curren
     v = Security.verify_token_r(curren_token)
 
     if v:
-        con = dbcon.srit.oficiales.find_one({'id': datosd["id"]})
+        con = dbcon.srit.oficiales.find_one({'username': datosd["username"]})
+        # dbv3 = dbcon.srit.oficiales.count_documents({})
+        # dbv3 += 1
+        resultado = dbcon.srit.oficiales.find({}).sort({"idof": -1 }).limit(1)
+    
+        if resultado != None:
+            ll = resultado.next()
+            dbv3 = int(ll["idof"])
+            dbv3 += 1
+            datosd.update({"idof": dbv3})
 
         if con == None:
             if datosd["password"] == datosd["password2"]:
@@ -45,14 +53,14 @@ def registro_oficiales(datos: Doficial, curren_token: Token = Depends(get_curren
                 datosd["password"] = sha256_crypt.encrypt(datosd["password"])
 
                 registro = dbcon.srit.oficiales.insert_one(datosd)
-                
+
                 return {"message": "Oficial registrado"}
-            else: 
+            else:
                 return {"message": "password no coinciden"}
-            
+
         else:
 
-            return {"error": "Id Oficial ya existe"}
+            return {"error": "Usuario ya existe"}
     else:
         respuesta = {"mensaje": "No autorizado"}
         return respuesta, 401
@@ -110,11 +118,45 @@ def modificar_registro_de_oficial_obj_id(id: str, datos: Doficial, curren_token:
 
 
 @roficial.delete("/roficial/{id}")
-def borrar_registo_de_oficial(curren_token: Token = Depends(get_current_token)):
+def borrar_registo_de_oficial(id: str, curren_token: Token = Depends(get_current_token)):
     acceso = Security.verify_token_r(curren_token)
     if acceso:
-        to_do = "go"
-    else:
-        to_do = "no go"
+        dbv = dbcon.srit.oficiales.find_one({"_id": ObjectId(id)})
+        if dbv != None:
+            
+            datosv = oficialEntity(dbv)
+            cdb = dbcon.srit.infracciones.find_one({"idof": datosv["idof"]})
+            if cdb == None:
+                dbcon.srit.oficiales.find_one_and_delete({"_id": ObjectId(id)})
 
-        return {"mensaje": "No autorizado"}
+                return {"mensaje": "Registro de oficial eliminado"}
+            else:
+                return {"mensaje": "Oficial tiene registros infraccion asignados, debe asignar a otros oficiales"}
+        else:
+            return {"mensaje": "Registro de oficial no encontrado"}
+    else:
+
+        return {"Mensaje": "No autorizado"}
+
+from bson.json_util import dumps, loads
+
+# @roficial.get("/prueba")
+# def prueba():
+
+#     resultado = dbcon.srit.oficiales.find({}).sort({"idof": -1 }).limit(1)
+    
+#     if resultado != None:
+#         print(resultado)
+#         ll = resultado.next()
+#         print("Resultado", int(ll["idof"]))
+#         gdata = int(ll["idof"])
+#         gdata += 1
+#         print("gdata +1 carajo", gdata)
+#         # for doc in resultado:
+#         #     print(doc)
+        
+        
+    
+#         # print("resultado 2 ", resultado)
+        
+#     return {"Mensaje": "Dev"}

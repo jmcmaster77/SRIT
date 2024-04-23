@@ -65,10 +65,16 @@ def registro_persona(datos: Dpersonas, curren_token: Token = Depends(get_current
         con = dbcon.srit.personas.find_one({'email': nr["email"]})
 
         if con == None:
-            dbv3 = dbcon.srit.personas.count_documents({})
-            dbv3 += 1
-            nr.update({"idp": dbv3})
-            registro = dbcon.srit.personas.insert_one(nr)
+            # dbv3 = dbcon.srit.personas.count_documents({})
+            # dbv3 += 1
+            resultado = dbcon.srit.personas.find({}).sort({"idp": -1 }).limit(1)
+    
+            if resultado != None:
+                ll = resultado.next()
+                dbv3 = int(ll["idp"])
+                dbv3 += 1
+                nr.update({"idp": dbv3})
+                registro = dbcon.srit.personas.insert_one(nr)
             # print("NR:", registro)
             return {"message": "persona registrada"}
         else:

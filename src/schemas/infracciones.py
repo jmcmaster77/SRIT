@@ -7,7 +7,7 @@ def infraccionEntity(item) -> dict:
         "idof": item["idof"],
         "comentario": item["comentario"],
         "registrado": item["registrado"],
-        "pagada": item["pagada"]
+        "pagado": item["pagado"]
     }
 
 
@@ -23,6 +23,7 @@ def infraccionxeEntity(item) -> dict:
         "idp": item["idp"],
         "placa": item["placa"],
         "marca": item["marca"],
+        "multa": item["multa"],
         "comentario": item["comentario"],
         "pagado": item["pagado"]
     }

@@ -38,13 +38,20 @@ def registro_de_ingracciones(datos: Dinfraccion, curren_token: Token = Depends(g
         datosp = dict(datos)
 
         dbv1 = dbcon.srit.vehiculos.find_one({"placa": datosp["placa"]})
-        dbv2 = dbcon.srit.oficiales.find_one({"id": datosp["idof"]})
+        dbv2 = dbcon.srit.oficiales.find_one({"idof": datosp["idof"]})
         # dbv3 = dbcon.srit.infracciones.find().sort({'secuecial' : -1})
         # db.infracciones.countDocuments({}, { hint: "_id_"})
-        dbv3 = dbcon.srit.infracciones.count_documents({})
-        dbv3 += 1
-        datosp.update({"secuencial": dbv3})
+        # dbv3 = dbcon.srit.infracciones.count_documents({})
+        # dbv3 += 1
+        resultado = dbcon.srit.infracciones.find(
+            {}).sort({"secuencial": -1}).limit(1)
 
+        if resultado != None:
+            ll = resultado.next()
+            dbv3 = int(ll["secuencial"])
+            dbv3 += 1
+            datosp.update({"secuencial": dbv3})
+            datosp.update({"pagado": False})
         if dbv1 != None:
             if dbv2 != None:
                 dbcon.srit.infracciones.insert_one(datosp)
@@ -74,68 +81,86 @@ def consulta_de_infracciones(curren_token: Token = Depends(get_current_token)):
         return {"mensaje": "No autorizado"}
 
 
+@rinfraccion.put("/infracciones/pago")
+def pago_de_infraccion(secuencial: int, curren_token: Token = Depends(get_current_token)):
+    acceso = Security.verify_token_r(curren_token)
+    if acceso:
+        
+        dbcommit = dbcon.srit.infracciones.find_one({"secuencial": secuencial})
+        
+        if dbcommit != None:
+            dbcon.srit.infracciones.find_one_and_update({"secuencial": secuencial}, {"$set": {"pagado" : True, "registrado" : datetime.now() }})
+            return {"mensaje":"Infraccion cambiada a pagada"}
+        else:
+            return {"mensaje": " No se encontraron registros"}, 404
+
+    else:
+        return {"mensaje": "No autorizado"}
+    
+
+
 @rinfraccion.get("/infracciones_email")
 def consulta_ingracciones_por_email(email: EmailStr):
 
     pipeline = [
-    {
-        '$project': {
-            'idp': 1, 
-            'fullname': 1, 
-            'email': 1
+        {
+            '$project': {
+                'idp': 1,
+                'fullname': 1,
+                'email': 1
+            }
+        }, {
+            '$lookup': {
+                'from': 'vehiculos',
+                'localField': 'idp',
+                'foreignField': 'idp',
+                'as': 'vehiculos'
+            }
+        }, {
+            '$unwind': {
+                'path': '$vehiculos'
+            }
+        }, {
+            '$project': {
+                '_id': 1,
+                'idp': 1,
+                'fullname': 1,
+                'email': 1,
+                'placa': '$vehiculos.placa',
+                'marca': '$vehiculos.marca'
+            }
+        }, {
+            '$lookup': {
+                'from': 'infracciones',
+                'localField': 'placa',
+                'foreignField': 'placa',
+                'as': 'infracciones'
+            }
+        }, {
+            '$unwind': {
+                'path': '$infracciones'
+            }
+        }, {
+            '$project': {
+                '_id': 1,
+                'fullname': 1,
+                'email': 1,
+                'idp': 1,
+                'placa': 1,
+                'marca': 1,
+                'multa': '$infracciones.multa',
+                'comentario': '$infracciones.comentario',
+                'pagado': '$infracciones.pagado'
+            }
+        }, {
+            '$match': {
+                'email': email
+            }
         }
-    }, {
-        '$lookup': {
-            'from': 'vehiculos', 
-            'localField': 'idp', 
-            'foreignField': 'idp', 
-            'as': 'vehiculos'
-        }
-    }, {
-        '$unwind': {
-            'path': '$vehiculos'
-        }
-    }, {
-        '$project': {
-            '_id': 1, 
-            'idp': 1, 
-            'fullname': 1, 
-            'email': 1, 
-            'placa': '$vehiculos.placa', 
-            'marca': '$vehiculos.marca'
-        }
-    }, {
-        '$lookup': {
-            'from': 'infracciones', 
-            'localField': 'placa', 
-            'foreignField': 'placa', 
-            'as': 'infracciones'
-        }
-    }, {
-        '$unwind': {
-            'path': '$infracciones'
-        }
-    }, {
-        '$project': {
-            '_id': 1, 
-            'fullname': 1, 
-            'email': 1, 
-            'idp': 1, 
-            'placa': 1, 
-            'marca': 1, 
-            'multa': '$infracciones.multa', 
-            'comentario': '$infracciones.comentario', 
-            'pagado': '$infracciones.pagada'
-        }
-    }, {
-        '$match': {
-            'email': email
-        }
-    }
     ]
 
     dbcommint = dbcon.srit.personas.aggregate(pipeline)
-    
-    # infraccionEntity(dbcommint)
-
-    return infraccionxesEntity(dbcommint)
+    if dbcommint == None:
+        return {"Mensaje": "Persona no posee infracciones registradas"}
+    else:
+        return infraccionxesEntity(dbcommint)

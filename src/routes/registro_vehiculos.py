@@ -123,16 +123,30 @@ def modificar_registro_vehiculo(id: str, vehiculo: Dvehiculos,  curren_token: To
             else:
                 return {"mensaje": "Registro modificado"}
     else:
-        return
+        return {"Mensaje": "No autorizado"}  
 
 
 @rvehiculos.delete("/rvehiculos/{id}")
 def eliminar_registro_vehiculos(id: str, curren_token: Token = Depends(get_current_token)):
     acceso = Security.verify_token_r(curren_token)
     if acceso:
-        to_do = "Dev"
-    else:
-        more_to_do = "Dev dev"
+        # validacion si existe 
+        dbv = dbcon.srit.vehiculos.find_one({"_id": ObjectId(id) })
+        if dbv != None:
+            # validacion si tiene infracciones cargadas
 
-    
-        return {"Mensaje":"Dev"}
+            
+            datosv = vehiculoEntity(dbv)
+            cdb = dbcon.srit.infracciones.find_one({"placa": datosv["placa"] })
+            if cdb == None:
+                dbcon.srit.vehiculos.find_one_and_delete({"_id": ObjectId(id) })
+
+                return {"mensaje":"Vehiculo Eliminado"}
+            else:
+                return {"mensaje":"Vehiculo Tiene Cargada una infraccion"}
+        else:
+            return {"mensaje":"Id no encontrado"}
+        
+    else:
+            
+        return {"Mensaje": "No autorizado"}  
