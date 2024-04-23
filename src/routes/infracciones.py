@@ -33,7 +33,7 @@ def get_current_token(auth_key: str = Secu(token_key)):
 
 @rinfraccion.put("/rinfraccion")
 def registro_de_ingracciones(datos: Dinfraccion, curren_token: Token = Depends(get_current_token)):
-    acceso = Security.verify_token_r(str(curren_token).split(" ")[1])
+    acceso = Security.verify_token_r(curren_token)
     if acceso:
         datosp = dict(datos)
 
@@ -62,7 +62,7 @@ def registro_de_ingracciones(datos: Dinfraccion, curren_token: Token = Depends(g
 
 @rinfraccion.get("/infracciones")
 def consulta_de_infracciones(curren_token: Token = Depends(get_current_token)):
-    acceso = Security.verify_token_r(str(curren_token).split(" ")[1])
+    acceso = Security.verify_token_r(curren_token)
     if acceso:
         dbcommit = dbcon.srit.infracciones.find()
         if dbcommit != None:

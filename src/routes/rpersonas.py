@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Security as Secu
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
+from schemas.personas import personaEntity, personasEntity
 # from uuid import uuid4 as uuid
 # para validacion del token
 from fastapi.security.api_key import APIKeyHeader
@@ -28,11 +29,36 @@ def get_current_token(auth_key: str = Secu(token_key)):
     return auth_key
 
 
+@rpersonas.get('/personas')
+def consulta_personas(curren_token: Token = Depends(get_current_token)):
+    has_access = Security.verify_token_r(curren_token)
+    if has_access:
+        try:
+            consulta = dbcon.srit.personas.find()
+            return personasEntity(consulta)
+        except Exception as error:
+
+            return {"Mensaje": error}
+    else:
+        respuesta = {"Auth": "No autorizado"}
+        return respuesta, 401
+
+
+@rpersonas.get("/get_person_by_email")
+def buscar_persona_por_email(email: EmailStr):
+
+    dbcommit = dbcon.srit.personas.find_one({"email": email})
+    if dbcommit == None:
+        return {"mensaje": "correo no encontrado"}
+    else:
+        return personaEntity(dbcommit)
+
+
 @rpersonas.post("/rpersonas")
 def registro_persona(datos: Dpersonas, curren_token: Token = Depends(get_current_token)):
     nr = dict(datos)
     # print("Auth_get:", Authorization)   # Ojito borrar
-    v = Security.verify_token_r(str(curren_token).split(" ")[1])
+    v = Security.verify_token_r(curren_token)
 
     if v:
 
@@ -55,7 +81,7 @@ def registro_persona(datos: Dpersonas, curren_token: Token = Depends(get_current
 
 @rpersonas.put("/rpersonas/{id}")
 def modificar_persona(id: str, persona: Dpersonas, curren_token: Token = Depends(get_current_token)):
-    has_access = Security.verify_token_r(str(curren_token).split(' ')[1])
+    has_access = Security.verify_token_r(curren_token)
     if has_access:
         fp = dict(persona)
 
@@ -73,7 +99,7 @@ def modificar_persona(id: str, persona: Dpersonas, curren_token: Token = Depends
 
 @rpersonas.delete("/rpersonas/{id}")
 def eliminar_personas(id: str, curren_token: Token = Depends(get_current_token)):
-    has_access = Security.verify_token_r(str(curren_token).split(' ')[1])
+    has_access = Security.verify_token_r(curren_token)
     if has_access:
         # validacion si tiene vehiculos registrados
 
@@ -81,9 +107,9 @@ def eliminar_personas(id: str, curren_token: Token = Depends(get_current_token))
         if dbv != None:
 
             gdata = personaEntity(dbv)
-            
+
             dbvalidacion = dbcon.srit.vehiculos.find_one({"idp": gdata["idp"]})
-            
+
             if dbvalidacion == None:
                 dbcommint = dbcon.srit.personas.find_one_and_delete(
                     {"_id": ObjectId(id)})

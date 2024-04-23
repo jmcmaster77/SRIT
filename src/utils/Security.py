@@ -55,13 +55,24 @@ class Security():
     def verify_token_r(cls, token):
 
         if (len(token) > 0):
-
+            tok = str(validar_bearer(token))
             try:
                 payload = jwt.decode(
-                    token, cls.jwt_key, algorithms=["HS256"])
+                    tok, cls.jwt_key, algorithms=["HS256"])
                 roles = list(payload['roles'])
                 if "admin" in roles:
                     return True
                 return False
             except (jwt.ExpiredSignatureError, jwt.InvalidSignatureError, jwt.InvalidTokenError):
                 return False
+
+
+def validar_bearer(token):
+    vtokenstring = token
+
+    if vtokenstring[0:6] == "Bearer":
+        token_validated = str(token).split(' ')[1]
+        return token_validated
+    else:
+        token_validated = token
+        return token_validated

@@ -34,7 +34,7 @@ def get_current_token(auth_key: str = Secu(token_key)):
 @rvehiculos.post("/rvehiculos")
 def registro_vehiculos(datos: Dvehiculos, curren_token: Token = Depends(get_current_token)):
     datosd = dict(datos)
-    v = Security.verify_token_r(str(curren_token).split(" ")[1])
+    v = Security.verify_token_r(curren_token)
 
     if v:
         con = dbcon.srit.personas.find_one({'idp': datosd["idp"]})
@@ -57,7 +57,7 @@ def registro_vehiculos(datos: Dvehiculos, curren_token: Token = Depends(get_curr
 
 @rvehiculos.get("/rvehiculos")
 def consulta_vehiculos(curren_token: Token = Depends(get_current_token)):
-    acceso = Security.verify_token_r(str(curren_token).split(" ")[1])
+    acceso = Security.verify_token_r(curren_token)
     if acceso:
         consulta = dbcon.srit.vehiculos.find()
 
@@ -73,7 +73,7 @@ def consulta_vehiculos(curren_token: Token = Depends(get_current_token)):
 
 @rvehiculos.get("/rvehiculos/{id}")
 def consulta_vehiculos_por_id(id: str, curren_token: Token = Depends(get_current_token)):
-    acceso = Security.verify_token_r(str(curren_token).split(" ")[1])
+    acceso = Security.verify_token_r(curren_token)
     if acceso:
         consulta = dbcon.srit.vehiculos.find_one({'_id': ObjectId(id)})
         
@@ -88,7 +88,7 @@ def consulta_vehiculos_por_id(id: str, curren_token: Token = Depends(get_current
 
 @rvehiculos.get("/rvehiculos/p/{placa}")
 def consulta_vehiculos_por_placa(placa: str, curren_token: Token = Depends(get_current_token)):
-    acceso = Security.verify_token_r(str(curren_token).split(" ")[1])
+    acceso = Security.verify_token_r(curren_token)
     if acceso:
         consulta = dbcon.srit.vehiculos.find_one({'placa': placa})
         print(consulta)
@@ -104,7 +104,7 @@ def consulta_vehiculos_por_placa(placa: str, curren_token: Token = Depends(get_c
 
 @rvehiculos.put("/rvehiculos/{id}")
 def modificar_registro_vehiculo(id: str, vehiculo: Dvehiculos,  curren_token: Token = Depends(get_current_token)):
-    acceso = Security.verify_token_r(str(curren_token).split(" ")[1])
+    acceso = Security.verify_token_r(curren_token)
     if acceso:
         fv = dict(vehiculo)
         # valida que el id de la persona este registrado
@@ -128,7 +128,7 @@ def modificar_registro_vehiculo(id: str, vehiculo: Dvehiculos,  curren_token: To
 
 @rvehiculos.delete("/rvehiculos/{id}")
 def eliminar_registro_vehiculos(id: str, curren_token: Token = Depends(get_current_token)):
-    acceso = Security.verify_token_r(str(curren_token).split(" ")[1])
+    acceso = Security.verify_token_r(curren_token)
     if acceso:
         to_do = "Dev"
     else:

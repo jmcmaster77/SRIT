@@ -34,7 +34,7 @@ def get_current_token(auth_key: str = Secu(token_key)):
 @roficial.post("/roficial")
 def registro_oficiales(datos: Doficial, curren_token: Token = Depends(get_current_token)):
     datosd = dict(datos)
-    v = Security.verify_token_r(str(curren_token).split(" ")[1])
+    v = Security.verify_token_r(curren_token)
 
     if v:
         con = dbcon.srit.oficiales.find_one({'id': datosd["id"]})
@@ -60,7 +60,7 @@ def registro_oficiales(datos: Doficial, curren_token: Token = Depends(get_curren
 
 @roficial.get("/roficial")
 def buscar_oficiales(curren_token: Token = Depends(get_current_token)):
-    acceso = Security.verify_token_r(str(curren_token).split(" ")[1])
+    acceso = Security.verify_token_r(curren_token)
     if acceso:
         dbcommit = dbcon.srit.oficiales.find()
         if dbcommit != None:
@@ -75,7 +75,7 @@ def buscar_oficiales(curren_token: Token = Depends(get_current_token)):
 
 @roficial.get("/roficial/{id}")
 def buscar_oficial_id(id: int, curren_token: Token = Depends(get_current_token)):
-    acceso = Security.verify_token_r(str(curren_token).split(" ")[1])
+    acceso = Security.verify_token_r(curren_token)
     if acceso:
         dbcommit = dbcon.srit.oficiales.find_one({"idof": id})
         if dbcommit != None:
@@ -89,7 +89,7 @@ def buscar_oficial_id(id: int, curren_token: Token = Depends(get_current_token))
 
 @roficial.put("/roficial/{id}")
 def modificar_registro_de_oficial_obj_id(id: str, datos: Doficial, curren_token: Token = Depends(get_current_token)):
-    acceso = Security.verify_token_r(str(curren_token).split(" ")[1])
+    acceso = Security.verify_token_r(curren_token)
     if acceso:
         fo = dict(datos)
         if fo["password"] == fo["password2"]:
@@ -111,7 +111,7 @@ def modificar_registro_de_oficial_obj_id(id: str, datos: Doficial, curren_token:
 
 @roficial.delete("/roficial/{id}")
 def borrar_registo_de_oficial(curren_token: Token = Depends(get_current_token)):
-    acceso = Security.verify_token_r(str(curren_token).split(" ")[1])
+    acceso = Security.verify_token_r(curren_token)
     if acceso:
         to_do = "go"
     else:

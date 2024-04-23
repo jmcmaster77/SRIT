@@ -38,7 +38,7 @@ def generacion_token_for_user(user: Userget):
 
 @auth.post("/get_token_oficial")
 def generacion_token_for_oficial(user: Userget):
-    
+
     _user = User(user.id, user.username, user.password, None)
 
     authenticated_user = AuthService.login_oficial(_user)
@@ -78,7 +78,7 @@ class Duser_m(BaseModel):
 
 @auth.post("/create_user")
 def creacion_usuario(user_data: Duser, curren_token: Token = Depends(get_current_token)):
-    has_access = Security.verify_token_r(str(curren_token).split(' ')[1])
+    has_access = Security.verify_token_r(curren_token)
     if has_access:
 
         if user_data.password == user_data.password2:
@@ -101,7 +101,7 @@ def creacion_usuario(user_data: Duser, curren_token: Token = Depends(get_current
 
 @auth.get("/users")
 def consulta_usuarios(curren_token: Token = Depends(get_current_token)):
-    has_access = Security.verify_token_r(str(curren_token).split(' ')[1])
+    has_access = Security.verify_token_r(curren_token)
     if has_access:
 
         consulta = (usersEntity(dbcon.srit.users.find()))
@@ -112,7 +112,7 @@ def consulta_usuarios(curren_token: Token = Depends(get_current_token)):
 
 @auth.get("/users/{id}")
 def consulta_usuario_por_id(id: int, curren_token: Token = Depends(get_current_token)):
-    has_access = Security.verify_token_r(str(curren_token).split(' ')[1])
+    has_access = Security.verify_token_r(curren_token)
     if has_access:
         consulta = dbcon.srit.users.find_one({"id": id})
         if consulta != None:
@@ -123,7 +123,7 @@ def consulta_usuario_por_id(id: int, curren_token: Token = Depends(get_current_t
 
 @auth.put("/users/{id}")
 def modificar_usuario(id: int, user: Duser_m, curren_token: Token = Depends(get_current_token)):
-    has_access = Security.verify_token_r(str(curren_token).split(' ')[1])
+    has_access = Security.verify_token_r(curren_token)
     if has_access:
 
         if user.password == user.password2:
@@ -149,7 +149,7 @@ def modificar_usuario(id: int, user: Duser_m, curren_token: Token = Depends(get_
 
 @auth.delete("/users/{id}")
 def eliminar_usuario(id: int, curren_token: Token = Depends(get_current_token)):
-    has_access = Security.verify_token_r(str(curren_token).split(' ')[1])
+    has_access = Security.verify_token_r(curren_token)
     if has_access:
 
         dbcommint = dbcon.srit.users.find_one_and_delete({"id": id})
@@ -164,11 +164,8 @@ def eliminar_usuario(id: int, curren_token: Token = Depends(get_current_token)):
 
 @auth.post("/verify/token")
 def verify_token(curren_token: Token = Depends(get_current_token)):
-    has_access = Security.verify_token_r(str(curren_token).split(' ')[1])
+    has_access = Security.verify_token_r(curren_token)
     if has_access:
-
         return {"Mensajes": "Token Valido"}
-
     else:
-
-        return {"Auth": "No autorizado"}, 401
+        return {"Mensajes": "No autorizado"}, 401
