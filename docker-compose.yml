@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  mongo-server:
+    image: mongo:latest
+    container_name: mongo-server
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - mongodb_network
+  srit:
+    image: srit
+    container_name: srit_api
+    restart: always
+    ports:
+      - "5000:5000"
+    networks:
+      - srit_network
+volumes:
+  mongodb:data:
+networks:
+  mongodb_networ:
