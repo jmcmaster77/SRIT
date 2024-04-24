@@ -19,11 +19,11 @@ Se requiere docker para ejecutar esta api.
 docker-compose up -d
 ```
 
-.[!NOTE].
-Esta api está configurada con el puerto 5000 para la api y el puerto 27017 para el servidor de mongodb.
+> [!NOTE]
+> Esta api está configurada con el puerto 5000 para la api y el puerto 27017 para el servidor de mongodb.
 
-.[!WARNING].
-Si tienes un servidor de mongodb activo para evitar conflictos detén el servicio.
+> [!IMPORTANT]
+> Si tienes un servidor de mongodb activo para evitar conflictos detén el servicio.
 
 luego
 
@@ -35,9 +35,9 @@ docker-compose up
 
 http://localhost:5000/docs
 
-.[!WARNING]. verificar que el contenedor está en ejecución
+[!TIP] verificar que el contenedor está en ejecución
 
-### Documentacion adicional 
+### Documentación adicional 
 
 En el siguiente apartado, se puede ver la documentación mas detallasa de la api.
 
