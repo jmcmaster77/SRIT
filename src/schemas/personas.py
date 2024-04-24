@@ -1,9 +1,10 @@
 def personaEntity(item) -> dict:
     return {
-        "id": str(item["_id"]),
-        "rid": item["rid"],
-        "name": item["name"],
-        "ci": item["ci"]
+        "_id": str(item["_id"]),
+        "idp": item["idp"],
+        "fullname": item["fullname"],
+        "email": item["email"],
+        "registrado": item["registrado"]
     }
 
 

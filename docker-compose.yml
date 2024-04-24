@@ -1,0 +1,26 @@
+version: '3.9'
+# despliega api SRIT con un contenedor alojando el api y un contenedor con la db en mongo 
+services:
+  srit:
+    build: .
+    ports:
+      - "5000:5000"
+    
+  mongo-server:
+    image: mongo:latest
+    container_name: mongo-server
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: jm
+      MONGO_INITDB_ROOT_PASSWORD: 15332
+    ports:
+      - "27017:27017"
+
+    volumes:
+      - ./data/db:/data/db
+
+
+volumes:
+  mongo_data:
+
+
+
