@@ -1,23 +1,29 @@
 # Project name
-Sistema de Registro de Infracciones de Transito (SRIT)
+## Sistema de Registro de Infracciones de Transito (SRIT)
 
-# Version 
+## Version 
 
-Versión en desarrollo v.0.1
+Versión en desarrollo v.0.5
 
 ## Description
 
-Api escrita en python, fastAPI con conexion a una base de datos alojada en mongoDB
+Api escrita en python, fastAPI con conexion a una base de datos alojada en mongoDB esta api brinda los siguientes grupos de endpoints en los que se gestiona usuarios, generar token, personas, vehiculos, oficiales y infracciones.
 
 ## Requirements and Installation
 
-Se pueden ver en el archivo requirements.txt.
+Se requiere docker  para ejecutar esta api.
 
-## Ejecutar la app
+## Build 
 
 ```bash
-docker-compose build
+docker-compose up -d
 ```
+
+> .[!NOTE].
+> Esta api está configurada con el puerto 5000 para la api y el puerto 27017 para el servidor de mongodb.
+
+>.[!WARNING].
+>Si tienes un servidor de mongodb activo para evitar conflictos detén el servicio.
 
 luego
 
@@ -25,36 +31,7 @@ luego
 docker-compose up
 ```
 
-## Ejecutar ingresar a la siguiente url
+## ingresar a la siguiente url para desplegar la interface al verificar que el contenedor está en ejecución
 
 http://localhost:5000/docs
-
-# token de prueba 
-
-token user
-Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTM3MjE1NjIsImV4cCI6MTcyOTI3MzU2MiwiaWQiOjAsInVzZXJuYW1lciI6IlJheSIsImZ1bGxuYW1lIjoiUmF5YW4gUmF5Iiwicm9sZXMiOlsiYWRtaW4iLCJlZGl0Il19.QkyZHGBa2OdwbhEQ2eMzWjRyH0iHJZ-X5MkxlAMQ4og
-
-con esta api brinda los siguientes grupos de endpoints en los que se gestiona usuarios, generar token, personas, vehiculos, oficiales y infracciones.
-
-estas se pueden acceder desde la interface generada con FastAPI http://localhost:5000/docs
-
-pueden descargar el proyecto modificar .env para editar la ip y apuntar al contenedor o servidor de mongo donde hagan la restauracion de la base de datos. SRIT el dump srit_dev.db esta disponible en los archivos 
-
-usuario de la basede datos mongo es -u jm -p 15332
-
-el Docker File esta preparado para realizar un  build de un  contenedor con una imagen de alpine 
-
-utilizar el siguiente comando en la carpeta donde hagan el pull de la app api 
-docker build -t SRIT . 
-
-JWT de prueba 
-
-token user
-Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTM3MjE1NjIsImV4cCI6MTcyOTI3MzU2MiwiaWQiOjAsInVzZXJuYW1lciI6IlJheSIsImZ1bGxuYW1lIjoiUmF5YW4gUmF5Iiwicm9sZXMiOlsiYWRtaW4iLCJlZGl0Il19.QkyZHGBa2OdwbhEQ2eMzWjRyH0iHJZ-X5MkxlAMQ4og
-
-token oficial 
-Bearer
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTM3ODMzNjAsImV4cCI6MTcyOTMzNTM2MCwiaWQiOjEsInVzZXJuYW1lciI6InBpY2FwaWVkcmEiLCJmdWxsbmFtZSI6IlBlZHJvIFBpY2FwaWVkcmEiLCJyb2xlcyI6WyJhZG1pbiIsImVkaXQiXX0.fasWb6Smz1zTw4Q-zo0MPdippGgSEKlJOH21KqD664A
-
-![image](https://github.com/jmcmaster77/SRIT/assets/85424450/7674527a-c664-4958-bcfa-95c75a1776ea)
 
