@@ -35,7 +35,8 @@ docker-compose up
 
 http://localhost:5000/docs
 
-> [!TIP] verificar que el contenedor está en ejecución
+> [!TIP] 
+> verificar que el contenedor está en ejecución
 
 ### Documentación adicional 
 
