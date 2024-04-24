@@ -31,7 +31,14 @@ luego
 docker-compose up
 ```
 
-### ingresar a la siguiente url para desplegar la interface al verificar que el contenedor está en ejecución
+### Los enpoints se encuentran publicados en el siguiente link 
 
 http://localhost:5000/docs
 
+.[!WARNING]. verificar que el contenedor está en ejecución
+
+### Documentacion adicional 
+
+En el siguiente apartado, se puede ver la documentación mas detallasa de la api.
+
+[Documentación detallada](API.md)
