@@ -8,6 +8,7 @@ services:
     
   mongo-server:
     image: mongo:latest
+    restart: always
     container_name: mongo-server
     environment:
       MONGO_INITDB_ROOT_USERNAME: jm
