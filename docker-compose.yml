@@ -5,11 +5,13 @@ services:
     build: .
     ports:
       - "5000:5000"
-
-
+    
   mongo-server:
     image: mongo:latest
     container_name: mongo-server
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: jm
+      MONGO_INITDB_ROOT_PASSWORD: 15332
     ports:
       - "27017:27017"
 
