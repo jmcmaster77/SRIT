@@ -2,3 +2,4 @@ notas_srit.txt
 *.pyc
 .vscode
 __pycache__/
+\data\db\journal
