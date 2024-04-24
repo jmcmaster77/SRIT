@@ -1,0 +1,8 @@
+# se establese que end of line de la carpeta sean lf y no dañe la base de datos que esta alojada en un sistema basado en UNIX
+/data/db/* text eol=lf
+/data/db/.mongodb/mongosh/* text eol=lf
+/data/db/.mongodb/mongosh/snippets/* text eol=lf
+/data/db/.mongodb/mongosh/* text eol=lf
+/data/db/.mongodb/* text eol=lf
+/diagnostic.data/* text eol=lf
+/journal/* text eol=lf
