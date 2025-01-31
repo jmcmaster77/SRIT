@@ -4,6 +4,7 @@ from schemas.users import userEntity
 from schemas.oficiales import oficialEntity
 from passlib.hash import sha256_crypt
 
+
 class AuthService():
 
     @classmethod
@@ -12,8 +13,7 @@ class AuthService():
 
             authenticated_user = None
 
-            rconsult = userEntity(
-                dbcon.srit.users.find_one({'id': int(user.id)}))
+            rconsult = userEntity(dbcon.srit.users.find_one({'id': int(user.id)}))
 
             if user.username == rconsult["username"] and sha256_crypt.verify(user.password, rconsult["password"]):
                 authenticated_user = User(
@@ -22,7 +22,7 @@ class AuthService():
 
         except Exception as ex:
             raise Exception(ex)
-        
+
     @classmethod
     def login_oficial(cls, user):
         try:
